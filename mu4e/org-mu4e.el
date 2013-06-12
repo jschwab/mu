@@ -76,11 +76,25 @@ Example usage:
     ((eq major-mode 'mu4e-view-mode)
       (let* ((msg  (mu4e-message-at-point))
 	     (msgid   (or (plist-get msg :message-id) "<none>"))
+	     (to  (or (plist-get msg :to) "<none>"))
+         (toname (car (car to)))
+         (toaddress (cdr (car to)))
+	     (from  (or (plist-get msg :from) "<none>"))
+         (fromname (car (car from)))
+         (fromaddress (cdr (car from)))
+	     (subject  (or (plist-get msg :subject) "<none>"))
 	     link)
        (org-store-link-props :type "mu4e" :link link
 			     :message-id msgid)
        (setq link (concat "mu4e:msgid:" msgid))
        (org-add-link-props :link link
+                           :to (format "%s <%s>" toname toaddress)
+                           :toname toname
+                           :toaddress toaddress
+                           :from (format "%s <%s>" fromname fromaddress)
+                           :fromname fromname
+                           :fromaddress fromaddress
+                           :subject subject
 			   :description (funcall org-mu4e-link-desc-func msg))
        link))))
 
